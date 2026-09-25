@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Text as DreiText } from '@react-three/drei'
-import { BackSide, Euler, Matrix4, Quaternion, SRGBColorSpace, TextureLoader, Vector3 } from 'three'
+import { BackSide, Euler, Matrix4, Quaternion, Vector3 } from 'three'
 import { artTexture, glowTexture, imageTexture, woodTexture } from './art'
 import { contact, experience, projects, skills } from './data'
 
@@ -217,11 +217,6 @@ function Hall() {
 }
 
 function BackWall() {
-  const portrait = useMemo(() => {
-    const t = new TextureLoader().load('/headshot.jpg')
-    t.colorSpace = SRGBColorSpace
-    return t
-  }, [])
   return (
     <group position={[0, 0, START_Z - 0.02]} rotation={[0, Math.PI, 0]}>
       <Text position={[0, 3.1, 0]} fontSize={0.1} color={GREEN} letterSpacing={0.14}>
@@ -236,14 +231,6 @@ function BackWall() {
       <Text position={[0, 1.95, 0]} fontSize={0.07} color="#8a8a8a">
         Turn around and walk the gallery
       </Text>
-      <mesh position={[0, 1.25, 0.03]}>
-        <boxGeometry args={[0.9, 0.9, 0.06]} />
-        <meshStandardMaterial color="#1c1a17" roughness={0.5} />
-      </mesh>
-      <mesh position={[0, 1.25, 0.061]}>
-        <planeGeometry args={[0.72, 0.72]} />
-        <meshBasicMaterial map={portrait} />
-      </mesh>
     </group>
   )
 }
