@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Text as DreiText } from '@react-three/drei'
-import { BackSide, Euler, Matrix4, Quaternion, Vector3 } from 'three'
+import { BackSide, Euler, Matrix4, Quaternion, SRGBColorSpace, TextureLoader, Vector3 } from 'three'
 import { artTexture, glowTexture, imageTexture, woodTexture } from './art'
 import { contact, experience, projects, skills } from './data'
 
@@ -28,7 +28,7 @@ const items = [
     url: p.url,
     image: p.image,
   })),
-  ...experience.map((e) => ({ tag: `${e.date} / Experience`, title: e.role, desc: e.desc, sub: e.company })),
+  ...experience.map((e) => ({ tag: `${e.date} / Experience`, title: e.role, desc: e.desc, sub: e.company, image: e.logo, logo: true })),
 ]
 
 const rows = Math.ceil(items.length / 2)
@@ -76,7 +76,7 @@ const pedestals = skills.map(([label, list], i) => {
 const GLOW = glowTexture()
 
 function Painting({ ex, active }) {
-  const art = useMemo(() => (ex.image ? imageTexture : artTexture)(ex.title, ex.art, ex.image), [ex])
+  const art = useMemo(() => (ex.image ? imageTexture(ex.title, ex.art, ex.image, ex.logo ? 0.6 : 0.94) : artTexture(ex.title, ex.art)), [ex])
   const px = 1.12 // placard offset
   return (
     <group position={ex.pos} rotation={[0, ex.rotY, 0]}>
@@ -216,6 +216,11 @@ function Hall() {
 }
 
 function BackWall() {
+  const portrait = useMemo(() => {
+    const t = new TextureLoader().load('/headshot.jpg')
+    t.colorSpace = SRGBColorSpace
+    return t
+  }, [])
   return (
     <group position={[0, 0, START_Z - 0.02]} rotation={[0, Math.PI, 0]}>
       <Text position={[0, 3.1, 0]} fontSize={0.1} color={GREEN} letterSpacing={0.14}>
@@ -230,6 +235,14 @@ function BackWall() {
       <Text position={[0, 1.95, 0]} fontSize={0.07} color="#8a8a8a">
         Turn around and walk the gallery
       </Text>
+      <mesh position={[0, 1.25, 0.03]}>
+        <boxGeometry args={[0.9, 0.9, 0.06]} />
+        <meshStandardMaterial color="#1c1a17" roughness={0.5} />
+      </mesh>
+      <mesh position={[0, 1.25, 0.061]}>
+        <planeGeometry args={[0.72, 0.72]} />
+        <meshBasicMaterial map={portrait} />
+      </mesh>
     </group>
   )
 }

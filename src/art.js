@@ -96,8 +96,9 @@ const loadImage = (src) =>
 
 // Project screenshot(s); shows the generated art until they load. One roughly-canvas-shaped image is
 // cover-cropped from the top-left (UI screenshots). Several images, or odd shapes like terminal
-// strips, are stacked and fitted centered on the first image's corner colour.
-export function imageTexture(seed, i, src) {
+// strips, are stacked and fitted centered on the first image's corner colour (white if transparent).
+// `fit` is the share of the canvas a fitted image may fill (logos use less for breathing room).
+export function imageTexture(seed, i, src, fit = 0.94) {
   const t = artTexture(seed, i)
   Promise.all([].concat(src).map(loadImage))
     .then((imgs) => {
@@ -107,12 +108,12 @@ export function imageTexture(seed, i, src) {
       const g = c.getContext('2d')
       const w = Math.max(...imgs.map((m) => m.width))
       const h = imgs.reduce((sum, m) => sum + m.height, 0)
-      const cover = imgs.length === 1 && Math.abs(w / h - c.width / c.height) < 0.25
-      const s = cover ? Math.max(c.width / w, c.height / h) : Math.min(c.width / w, c.height / h) * 0.94
+      const cover = fit > 0.9 && imgs.length === 1 && Math.abs(w / h - c.width / c.height) < 0.25
+      const s = cover ? Math.max(c.width / w, c.height / h) : Math.min(c.width / w, c.height / h) * fit
 
       g.drawImage(imgs[0], 0, 0, 1, 1, 0, 0, 1, 1)
-      const [r, gr, b] = g.getImageData(0, 0, 1, 1).data
-      g.fillStyle = `rgb(${r},${gr},${b})`
+      const [r, gr, b, a] = g.getImageData(0, 0, 1, 1).data
+      g.fillStyle = a < 128 ? '#ffffff' : `rgb(${r},${gr},${b})`
       g.fillRect(0, 0, c.width, c.height)
 
       let y = cover ? 0 : (c.height - h * s) / 2

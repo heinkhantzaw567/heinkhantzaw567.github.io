@@ -51,6 +51,12 @@ a:hover { color: var(--accent); }
 }
 .intro[hidden] { display: none; }
 
+.intro .headshot {
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  object-fit: cover;
+}
+
 .intro .tag {
   font-size: 11px;
   letter-spacing: 0.12em;

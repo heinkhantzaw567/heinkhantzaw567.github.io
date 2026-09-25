@@ -41,6 +41,7 @@ function App() {
       <a className="corner" href="/classic.html">Classic view →</a>
 
       <div className="intro" hidden={entered}>
+        <img className="headshot" src="/headshot.jpg" alt="Hein Khant Zaw" width="96" height="96" />
         <div className="tag">Available for co-op · Winter 2027</div>
         <h1>Hein Khant <span>Zaw</span></h1>
         <p>Computer Science student at Toronto Metropolitan University. Walk the gallery to see my projects and experience.</p>
