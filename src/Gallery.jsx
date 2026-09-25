@@ -49,6 +49,7 @@ export const exhibits = [
     desc: "I'm currently open to co-op and internship opportunities. Whether you have a question or just want to connect — my inbox is always open.",
     sub: `${contact.email}  ·  linkedin.com/in/heinkhantzaw  ·  github.com/heinkhantzaw567`,
     url: `mailto:${contact.email}`,
+    image: '/headshot.jpg',
     art: 3,
     pos: [0, EYE + 0.1, END_Z + 0.02],
     rotY: 0,
